@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <typeinfo>
 using namespace std;
 
 
@@ -21,7 +22,7 @@ class TestCase{
 
     public:
         //Constructor for TestCase class
-        TestCase(string test_name, ostream &os):successes(0), failures(0), test(test_name), test_count(0),out(os){}
+        TestCase(string test_name, ostream &os);
         //Function that compares between two objects.
         template <typename T1, typename T2>
         TestCase& check_equal(T1 a, T2 b){
@@ -35,8 +36,8 @@ class TestCase{
             stream1 << a;
             ostringstream stream2;
             stream2 << b;
-            string ans=this->test+": Failure in test #"+to_string(this->test_count)+": "+stream1.str()+
-                    " should equal "+stream2.str()+"!";
+            string ans = this->test+": Failure in test #"+to_string(this->test_count)+": "+stream1.str()+
+                        " should equal "+stream2.str()+"!";
             out<<ans<<endl;
             return *this;
         }
@@ -83,28 +84,35 @@ class TestCase{
         template <typename Rec, typename Ans>
         TestCase& check_function(auto function_name, Rec received, Ans answered){
             test_count++;
-            Ans a = function_name(received);
-            if (a==answered){
-                successes++;
+            try{
+                Ans a = function_name(received);
+                if (a==answered){
+                    successes++;
+                    return *this;
+                }
+                failures++;
+                ostringstream stream1;
+                stream1 << a; //what the function returns
+                ostringstream stream2;
+                stream2 << answered; //the real answer we are supposed to received
+                string str = test+": Failure in test #"+to_string(test_count)+": Function should return "+stream2.str()+
+                            " but returned "+stream1.str()+"!";
+                out<<str<<endl;
+                return *this;
+            }catch( ... ){
+                auto a=function_name(received);
+                failures++;
+                ostringstream stream1;
+                stream1 << typeid(a).name(); //what the function returns
+                ostringstream stream2;
+                stream2 << answered; //the real answer we are supposed to received
+                string str = test+": Failure in test #"+to_string(test_count)+": Function should return "+stream2.str()+
+                            " but returned type"+stream1.str()+"!";
+                out<<str<<endl;
                 return *this;
             }
-            failures++;
-            ostringstream stream1;
-            stream1 << a; //what the function returns
-            ostringstream stream2;
-            stream2 << answered; //the real answer we are supposed to received
-            string str = test+": Failure in test #"+to_string(test_count)+": Function should return "+stream2.str()+
-                        " but returned "+stream1.str()+"!";
-            out<<str<<endl;
-            return *this;
         }
 
         //Function that prints num. of successes and num. of failures in testcase.
-        TestCase& print(){
-            int num_tests = successes + failures;
-            string report = "Test MyStruct operators: "+ to_string(failures) +" failed, "+ to_string(successes) +" passed, "+
-                            to_string(num_tests) +" total.";
-            out<<report<<endl;
-            return *this;
-        }
+        TestCase& print();
 };
