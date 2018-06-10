@@ -57,7 +57,7 @@ class TestCase{
             ostringstream stream2;
             stream2 << b;
             string ans = test+": Failure in test #"+to_string(test_count)+": "+stream1.str()+
-                        " should different "+stream2.str()+"!";
+                        " and "+stream2.str()+" are different types!";
             out<<ans<<endl;
             return *this;
         }
