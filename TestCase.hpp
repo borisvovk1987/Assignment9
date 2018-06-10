@@ -14,7 +14,7 @@ using namespace std;
 
 
 class TestCase{
-    protected:
+    private:
         string test;
         ostream &out;
         int successes;
@@ -30,7 +30,6 @@ class TestCase{
             this->test_count++;
             if (a==b){
                 this->successes++;
-                out<<""<<endl;
                 return *this;
             }
             this->failures++;
@@ -50,7 +49,6 @@ class TestCase{
             test_count++;
             if ((T)a != (T)b){
                 successes++;
-                out<<""<<endl;
                 return *this;
             }
             failures++;
@@ -73,7 +71,6 @@ class TestCase{
             string str = stream.str();
             if (str.compare(s)==0){
                 successes++;
-                out<<""<<endl;
                 return *this;
             }
             failures++;
@@ -91,7 +88,6 @@ class TestCase{
             Ans a = function_name(received);
             if (a==answered){
                 successes++;
-                out<<""<<endl;
                 return *this;
             }
             failures++;
