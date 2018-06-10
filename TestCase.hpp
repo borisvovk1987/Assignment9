@@ -47,7 +47,7 @@ class TestCase{
         template <typename T1, typename T2>
         TestCase& check_different(T1 a, T2 b){
             test_count++;
-            if (a!=b){
+            if (a==b){
                 successes++;
                 return *this;
             }
