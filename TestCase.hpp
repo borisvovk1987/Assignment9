@@ -14,7 +14,7 @@ using namespace std;
 
 
 class TestCase{
-    private:
+    protected:
         string test;
         ostream &out;
         int successes;
@@ -30,6 +30,7 @@ class TestCase{
             this->test_count++;
             if (a==b){
                 this->successes++;
+                out<<""<<endl;
                 return *this;
             }
             this->failures++;
@@ -44,11 +45,12 @@ class TestCase{
         }
 
         //Function that checks if two objects are different.
-        template <typename T1, typename T2>
-        TestCase& check_different(T1 a, T2 b){
+        template <typename T>
+        TestCase& check_different(T a, T b){
             test_count++;
-            if (a==b){
+            if ((T)a != (T)b){
                 successes++;
+                out<<""<<endl;
                 return *this;
             }
             failures++;
@@ -56,8 +58,8 @@ class TestCase{
             stream1 << a;
             ostringstream stream2;
             stream2 << b;
-            string ans = test+": Failure in test #"+to_string(test_count)+": "+stream1.str()+
-                        " and "+stream2.str()+" are different types!";
+            string ans = test+": Failure in test #"+to_string(this->test_count)+": "+stream1.str()+
+                        " shouldn't equal "+stream2.str()+"!";
             out<<ans<<endl;
             return *this;
         }
@@ -71,6 +73,7 @@ class TestCase{
             string str = stream.str();
             if (str.compare(s)==0){
                 successes++;
+                out<<""<<endl;
                 return *this;
             }
             failures++;
@@ -88,6 +91,7 @@ class TestCase{
             Ans a = function_name(received);
             if (a==answered){
                 successes++;
+                out<<""<<endl;
                 return *this;
             }
             failures++;
