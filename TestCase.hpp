@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <typeinfo>
+#include <functional>
 using namespace std;
 
 
@@ -81,38 +82,24 @@ class TestCase{
 
         //Function that receives a function, and two variables, and compares the between the answer received from the function
         //and the answer already known.
-        template <typename Rec, typename Ans>
-        TestCase& check_function(auto function_name, Rec received, Ans answered){
+        template <typename Func,typename Rec, typename Ans>
+        TestCase& check_function(Func function_name, Rec received, Ans answered){
             test_count++;
-            try{
-                Ans a = function_name(received);
-                if (a==answered){
-                    successes++;
-                    return *this;
-                }
-                failures++;
-                ostringstream stream1;
-                stream1 << a; //what the function returns
-                ostringstream stream2;
-                stream2 << answered; //the real answer we are supposed to received
-                string str = test+": Failure in test #"+to_string(test_count)+": Function should return "+stream2.str()+
-                            " but returned "+stream1.str()+"!";
-                out<<str<<endl;
-                return *this;
-            }catch( ... ){
-                auto a=function_name(received);
-                failures++;
-                ostringstream stream1;
-                stream1 << typeid(a).name(); //what the function returns
-                ostringstream stream2;
-                stream2 << answered; //the real answer we are supposed to received
-                string str = test+": Failure in test #"+to_string(test_count)+": Function should return "+stream2.str()+
-                            " but returned type"+stream1.str()+"!";
-                out<<str<<endl;
+            Ans a = function_name(received);
+            if (a==answered){
+                successes++;
                 return *this;
             }
+            failures++;
+            ostringstream stream1;
+            stream1 << a; //what the function returns
+            ostringstream stream2;
+            stream2 << answered; //the real answer we are supposed to received
+            string str = test+": Failure in test #"+to_string(test_count)+": Function should return "+stream2.str()+
+                        " but returned "+stream1.str()+"!";
+            out<<str<<endl;
+            return *this;
         }
-
         //Function that prints num. of successes and num. of failures in testcase.
         TestCase& print();
 };
