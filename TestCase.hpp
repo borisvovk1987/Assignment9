@@ -23,7 +23,7 @@ class TestCase{
 
     public:
         //Constructor for TestCase class
-        TestCase(string test_name, ostream &os);
+        TestCase(const string test_name, ostream &out);
         //Function that compares between two objects.
         template <typename T1, typename T2>
         TestCase& check_equal(T1 a, T2 b){
