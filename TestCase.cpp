@@ -6,6 +6,6 @@ TestCase::TestCase(string testName, ostream &out):passedTests(0), failedTests(0)
 
 TestCase& TestCase::print(){
 
-    std::cout<<testName<<": "<<failedTests<<" failed, "<<passedTests<<" passed, "<<totalTests<<" total.\n";
+    out<<testName<<": "<<failedTests<<" failed, "<<passedTests<<" passed, "<<totalTests<<" total.\n";
     return *this;
 }
